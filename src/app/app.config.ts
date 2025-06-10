@@ -6,43 +6,36 @@ import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 
 import { routes } from './app.routes';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
-// Registra la localizzazione italiana
 registerLocaleData(localeIt);
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // Localizzazione italiana
     { provide: LOCALE_ID, useValue: 'it-IT' },
-    
-    // Zone.js con ottimizzazioni per performance
-    provideZoneChangeDetection({ 
+    provideZoneChangeDetection({
       eventCoalescing: true,
-      runCoalescing: true 
+      runCoalescing: true
     }),
-    
-    // Router con preloading e ottimizzazioni
     provideRouter(
-      routes, 
-      withRouterConfig({ 
-        onSameUrlNavigation: 'reload', 
+      routes,
+      withRouterConfig({
+        onSameUrlNavigation: 'reload',
         urlUpdateStrategy: 'deferred',
         paramsInheritanceStrategy: 'always'
       }),
-      withPreloading(PreloadAllModules), // Precarica tutti i moduli lazy
+      withPreloading(PreloadAllModules),
       withInMemoryScrolling({
         scrollPositionRestoration: 'top',
         anchorScrolling: 'enabled'
       })
     ),
-    
-    // HTTP Client con fetch API moderno
     provideHttpClient(
       withInterceptorsFromDi(),
-      withFetch() // Usa fetch invece di XMLHttpRequest
+      withFetch()
     ),
-    
-    // Animazioni async per bundle size minore
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    provideClientHydration(withEventReplay()),
+    provideZoneChangeDetection({eventCoalescing: true})
   ]
 };
