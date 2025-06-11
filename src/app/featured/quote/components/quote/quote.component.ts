@@ -6,6 +6,9 @@ import { Component } from '@angular/core';
   templateUrl: './quote.component.html',
   styleUrl: './quote.component.css'
 })
+
 export class QuoteComponent {
+
+  protected readonly title = "quote works!";
 
 }
